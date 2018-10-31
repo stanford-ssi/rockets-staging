@@ -55,6 +55,7 @@ void startMotor(){
   tmc26XStepper.setStallGuardThreshold(4, 0);
   Serial.println("config finished, starting");
   tmc26XStepper.start();
+  tmc26XStepper.setEnabled(true);
   Serial.println("started");
 }
 
@@ -93,30 +94,45 @@ void StopMotor(){
 }
 
 void driveMotor(){
-  if (!tmc26XStepper.isMoving()) {
-    speed += speedDirection;
-    if (speed > maxSpeed) {
-      speed = maxSpeed;
-      speedDirection = -speedDirection;
-    } else if (speed < 0) {
-      speedDirection = -speedDirection;
-      speed = speedDirection;
-    }
-    //setting the speed
-    Serial.print("setting speed to ");
-    Serial.println(speed);
-    tmc26XStepper.setSpeed(speed);
-    //we want some kind of constant running time - so the length is just a product of speed
-    Serial.print("Going ");
-    Serial.print(10 * speed);
-    Serial.println(" steps");
-    tmc26XStepper.step(10 * speed);
-  } else {
-    //we put out the status every 100 steps
-    if (tmc26XStepper.getStepsLeft() % 100 == 0) {
-      Serial.print("Stall Guard: ");
-      Serial.println(tmc26XStepper.getCurrentStallGuardReading());
-    }
+  switch (motor_state){
+    case 0: // Stopped
+      digitalWrite(led_pin, LOW);
+      tmc26XStepper.stop();
+      break;
+    case 1: // Run back and forth
+      
+      break;
+    case 2: // Right Turning
+      digitalWrite(led_pin, HIGH);
+      if (!tmc26XStepper.isMoving()) {
+        speed += speedDirection;
+        if (speed > maxSpeed) {
+          speed = maxSpeed;
+          speedDirection = -speedDirection;
+        } else if (speed < 0) {
+          speedDirection = -speedDirection;
+          speed = speedDirection;
+        }
+        //setting the speed
+        Serial.print("setting speed to ");
+        Serial.println(speed);
+        tmc26XStepper.setSpeed(speed);
+        //we want some kind of constant running time - so the length is just a product of speed
+        Serial.print("Going ");
+        Serial.print(10 * speed);
+        Serial.println(" steps");
+        tmc26XStepper.step(10 * speed);
+      } else {
+        //we put out the status every 100 steps
+        if (tmc26XStepper.getStepsLeft() % 100 == 0) {
+          Serial.print("Stall Guard: ");
+          Serial.println(tmc26XStepper.getCurrentStallGuardReading());
+        }
+      }
+      tmc26XStepper.move();
+      break;
+    case 3: // Left Turning
+      
+      break;
   }
-  tmc26XStepper.move();
 }
