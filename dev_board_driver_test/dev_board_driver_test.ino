@@ -3,9 +3,10 @@
 
 //we have a stepper motor with 200 steps per rotation, CS pin 10, dir pin 6, step pin 7 and a current of 300mA
 const int steps_per_rev = 200;
-const int cs_pin = 10;
+const int cs_pin = 2;
 const int dir_pin = 6;
 const int step_pin = 7;
+
 TMC26XStepper tmc26XStepper = TMC26XStepper(steps_per_rev, cs_pin, dir_pin, step_pin, 700);
 
 int curr_step;
@@ -13,24 +14,13 @@ int speed =  0;
 int speedDirection = 100;
 int maxSpeed = 1000;
 
-/*
-  const int right_pin = 1;
-  const int left_pin = 2;
-  const int run_pin = 3;
-  const int stop_pin = 7;
-  const int led_pin = 13;
-*/
-
 const int serial_speed = 9600;
 int counter = 0;
 
-// 0 = stopped; 1 = run; 2 = right; 3 = left
-int motor_state = 0;
-
 void setup() {
   startSerial();
-  startMotor();
   initializePins();
+  startMotor();
 }
 
 void loop() {
@@ -56,12 +46,19 @@ void loop() {
 }
 
 void startSerial() {
+  while (!Serial);
   // Start the serial communication
   Serial.begin(serial_speed);
   // Print the header
   Serial.println("==============================");
   Serial.println("TMC26X Stepper Driver Tester");
   Serial.println("==============================");
+}
+
+void initializePins() {
+  pinMode(cs_pin, OUTPUT);
+  pinMode(dir_pin, OUTPUT);
+  pinMode(step_pin, OUTPUT);
 }
 
 void startMotor() {
@@ -77,10 +74,4 @@ void startMotor() {
   tmc26XStepper.start();
   tmc26XStepper.setEnabled(true);
   Serial.println("started");
-}
-
-void initializePins() {
-  pinMode(cs_pin, OUTPUT);
-  pinMode(dir_pin, OUTPUT);
-  pinMode(step_pin, OUTPUT);
 }

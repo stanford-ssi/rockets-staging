@@ -3,9 +3,9 @@
 
 //we have a stepper motor with 200 steps per rotation, CS pin 10, dir pin 6, step pin 7 and a current of 300mA
 const int steps_per_rev = 200;
-const int cs_pin = 10;
-const int dir_pin = 6;
-const int step_pin = 7;
+const int cs_pin = 2;
+const int dir_pin = 24;
+const int step_pin = 25;
 TMC26XStepper tmc26XStepper = TMC26XStepper(steps_per_rev, cs_pin, dir_pin, step_pin, 700);
 
 int curr_step;
@@ -29,8 +29,8 @@ int motor_state = 0;
 
 void setup() {
   startSerial();
-  startMotor();
   initializePins();
+  startMotor();
   initializeInterrupts();
 }
 
