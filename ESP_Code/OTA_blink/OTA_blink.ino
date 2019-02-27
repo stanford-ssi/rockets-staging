@@ -1,7 +1,9 @@
 /*********
   Rui Santos
   edited by Tylor Jilk
-  Blinks LED on and off 
+  Blinks LED on and off with OTA upload capability
+  Note that a hotspot must be turned on with ssid and password of that given below.
+  ArduinoOTA github: https://github.com/esp8266/Arduino/tree/master/libraries/ArduinoOTA
 *********/
 
 #include <ESP8266WiFi.h>
@@ -10,8 +12,8 @@
 #include <ArduinoOTA.h>
 
 // Replace with your network credentials
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
+const char* ssid = "Staging2K19";
+const char* password = "sEWnon6YhY!y7Ul#wwd&";
 const int led_pin = LED_BUILTIN;
 
 void setup() {
@@ -65,3 +67,12 @@ void loop() {
   digitalWrite(led_pin, HIGH);
   delay(1000);
 }
+
+/*
+ * Will want to use the commands
+ *    void onStart(OTA_CALLBACK(fn));
+ *    void onEnd(OTA_CALLBACK(fn));
+ *    void onProgress(OTA_CALLBACK_PROGRESS(fn));
+ *    void onError(OTA_CALLBACK_ERROR (fn));
+ * to control what the esp does on startup / shutdown so it doesn't do something dumb.
+ */
