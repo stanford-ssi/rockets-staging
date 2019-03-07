@@ -1,6 +1,13 @@
 #include <SPI.h>
 #include <TMC26XStepper.h>
 
+/*
+ * SPI Info
+ * SCK =  orig 20 / PB11   <=> new 6 / PA20
+ * SDI "MOSI" = orig 21 / PB10  => new 12 / PA19
+ * SDO "MISO" = orig 18 / PA12  => new 10 / PA18
+ */
+
 // These values are for h.boson_1.0
 // 200 steps per rotation, CS pin 7, dir pin 36, step pin 31 and a current of 300mA
 
