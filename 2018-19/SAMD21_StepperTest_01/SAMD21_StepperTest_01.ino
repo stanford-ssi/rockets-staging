@@ -13,9 +13,15 @@
 
 TMC26XStepper stepboi = TMC26XStepper(200,7,36,31,700);
 
+const int enable = 16;
+
 int step_speed =  200;
 
 void setup() {
+
+  pinMode(enable, OUTPUT);
+  digitalWrite(enable, HIGH);
+  pinMode(7, OUTPUT);
   Serial.begin(9600);
   //set this according to you stepper
   Serial.println("Configuring stepper driver");
@@ -29,6 +35,7 @@ void setup() {
   Serial.println("config finished, starting");
   stepboi.start();
   Serial.println("started");
+  digitalWrite(7, LOW);
 }
 
 void loop() {
