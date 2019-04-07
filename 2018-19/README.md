@@ -10,25 +10,19 @@
 
   .Note that all code is currently `FlightCodeRevA`
 
-===========================
 ## TEST 1: SAMD21 Talks
-===========================
 - Blink sketch
 - Write to SD card and log from photoresistor
 - Controls boost converter
 - Drives motor
 
-===========================
 ## TEST 2: ESP Talks
-===========================
 - OTA Blink Sketch (FlightCodeRevA)
 - Wireless 'arming' blink sketch
 - ESP changes memory register based on WiFi signal
 - Controlling from mobile device for assembly
 
-===========================
 ## TEST 3: Put it together
-===========================
 - SAMD21 running motor if told, etc.
 - Records data to SD card the whole time (or if a different esp memory register is true)
 - SAMD21 receives commands from ESP and can send things back (again, via memory registers)
