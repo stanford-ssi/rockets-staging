@@ -18,7 +18,7 @@ Drives motor?
 ===========================
 TEST 2: ESP Talks
 ===========================
-Blink sketch
+OTA Blink Sketch (FlightCodeRevA)
 Wireless 'arming' blink sketch
 ESP tells SAMD21 to blink
 ESP tells SAMD21 to rotate motor
