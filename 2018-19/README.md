@@ -11,13 +11,13 @@
   .Note that all code is currently `FlightCodeRevA`
 
 ## TEST 1: SAMD21 Talks
-- ~~Blink sketch
+- ~~Blink sketch~~
 - Write to SD card and log from photoresistor
-- ~~Controls boost converter
+- ~~Controls boost converter~~
 - Drives motor
 
 ## TEST 2: ESP Talks
-- ~~OTA Blink Sketch (FlightCodeRevA)
+- ~~OTA Blink Sketch (FlightCodeRevA)~~
 - Wireless 'arming' blink sketch
 - ESP changes memory register based on WiFi signal
 - Controlling from mobile device for assembly
