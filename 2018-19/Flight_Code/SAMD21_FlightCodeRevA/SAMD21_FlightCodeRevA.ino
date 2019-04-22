@@ -1,32 +1,33 @@
 /*
- * ### The Beginning (TM) ###
- * Staging code for h.boson_1.1 Staging Olympus Rockets SSI 2019
- * Currently has ability to receive data from the photores pin and log it into the microSD card.
- * In development:
- *  - ESP communication (esp wroom 02 is in slave mode)
- *  - Motor Driver
- *  - Controlling boost converter
- * Example class for using ESP8266 in Slave mode:
- *   https://github.com/esp8266/Arduino/tree/master/libraries/SPISlave
- *  
- * ABBREVIATIONS USED
- *   pr   |   Photoresistor
- *   esp  |   ESP WROOM 02
- *   md   |   Motor Driver
- *   sd   |   microSD
- *   bc   |   Boost Converter
- *   en   |   Enable
- */
+   ### The Beginning (TM) ###
+   Staging code for h.boson_1.1 Staging Olympus Rockets SSI 2019
+   Currently has ability to receive data from the photores pin and log it into the microSD card.
+   In development:
+    - ESP communication (esp wroom 02 is in slave mode)
+    - Motor Driver
+    - Controlling boost converter
+   Example class for using ESP8266 in Slave mode:
+     https://github.com/esp8266/Arduino/tree/master/libraries/SPISlave
+
+   ABBREVIATIONS USED
+     pr   |   Photoresistor
+     esp  |   ESP WROOM 02
+     md   |   Motor Driver
+     sd   |   microSD
+     bc   |   Boost Converter
+     en   |   Enable
+*/
 
 #include <SPI.h>
 #include <SD.h>
+#include <TMC26XStepper.h>
 
 // Configuration parameters - will determine whether or not certain methods are run
-const bool bool_sd_log = true;
-const bool bool_photores_read = true;
+const bool bool_sd_log = false;
+const bool bool_photores_read = false;
 const bool bool_esp_comms = false;
 const bool bool_drive_motor = false;
-const bool bool_boost_enable = false;
+const bool bool_boost_enable = true;
 
 // Photoresistor variables
 const int pr_pin = 24;        // PA02 on Arduino M0
@@ -46,16 +47,36 @@ const int md_clk = 17;        // PA23 on Arduino M0
 const int md_en = 37;         // PA22 on Arduino M0
 const int md_sgtst = 35;      // PB22 on Arduino M0
 
-// Boost converter variables
-const int bc_antiEn = 30;     // PB03 on Arduino M0
+/* Boost converter variables
+    bc_en   |   bc_antiEn   |   BC OUTPUT (V)
+    ------------------------------------------
+    LOW     |   HIGH        |   12
+    HIGH    |   HIGH        |   24
+    HIGH    |   LOW         |   0
+    LOW     |   LOW         |   0
+    ------------------------------------------
+*/
 const int bc_en = 32;         // PA28 on Arduino M0
+const int bc_antiEn = 30;     // PB03 on Arduino M0
+
+int step_speed =  200;
+
+// 200 steps per rotation, CS pin 7, dir pin 36, step pin 31 and a current of 300mA
+TMC26XStepper stepboi = TMC26XStepper(200,md_chipSelect,md_dir,md_step,700);
 
 void setup() {
   // "Hey! We're setting these pins as input/output pins!"
-  pinMode(photores_pin, INPUT);
+  pinMode(pr_pin, INPUT);
   pinMode(esp_chipSelect, OUTPUT);
+  pinMode(bc_en, OUTPUT);
+  pinMode(bc_antiEn, OUTPUT);
+  pinMode(md_en, OUTPUT);
+  pinMode(md_chipSelect, OUTPUT);
+  
+  // digitalWrite(esp_chipSelect, LOW);
+  digitalWrite(bc_antiEn, LOW); // Make boost output 0V by default
 
-  digitalWrite(esp_chipSelect, HIGH);
+  digitalWrite(md_en, HIGH);
 
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
@@ -74,12 +95,31 @@ void setup() {
     }
     Serial.println("card initialized.");
   }
+
+  if (bool_boost_enable) {
+    digitalWrite(bc_en, HIGH);
+    digitalWrite(bc_antiEn, HIGH);
+  }
+
+  /*
+  //char constant_off_time, char blank_time, char hysteresis_start, char hysteresis_end, char hysteresis_decrement
+  stepboi.setSpreadCycleChopper(2,24,8,6,0);
+  stepboi.setRandomOffTime(0);
+
+  stepboi.setMicrosteps(32);
+  stepboi.setStallGuardThreshold(4,0);
+  Serial.println("config finished, starting");
+  
+  Serial.println("started");
+  */
+  //stepboi.start();
+  digitalWrite(md_chipSelect, LOW);
 }
 
 void loop() {
   // pull data from resistor
   if (bool_photores_read) {
-    int photores = analogRead(photores_pin);
+    int photores = analogRead(pr_pin);
   }
 
   // Log photores data to SD card
@@ -87,10 +127,10 @@ void loop() {
     File dataFile = SD.open("datalog.txt", FILE_WRITE);
     // if the file is available, write to it:
     if (dataFile) {
-      dataFile.println(photores);
+      dataFile.println(pr_pin);
       dataFile.close();
       // print to the serial port too:
-      Serial.println(photores);
+      Serial.println(pr_pin);
     }
     // if the file isn't open, pop up an error:
     else {
@@ -98,22 +138,44 @@ void loop() {
     }
   }
 
-  if (bool_esp_comms){
+  if (bool_esp_comms) {
     // Here is where we check the esp to see if it is time to stage
   }
 
-  if (bool_boost_enable){
+  if (bool_boost_enable) {
     // if we get the go from the esp, enable the boost
-    if (bool_drive_motor){
+    if (bool_drive_motor) {
       // Here is where we tell the motor to actuate
     }
   }
+
+  /*
+  // First step one direction and print out stall guard.
+  stepboi.setSpeed(step_speed);
+  stepboi.step(step_speed);
+  stepboi.move();
+  if (stepboi.getStepsLeft()%100==0) {
+    Serial.print("Stall Guard: ");
+    Serial.println(stepboi.getCurrentStallGuardReading());
+  }
+  delay(5000); // delay 5 seconds
+
+  // Next step the opposite direction
+  stepboi.step(-step_speed);
+  stepboi.move();
+  if (stepboi.getStepsLeft()%100==0) {
+    Serial.print("Stall Guard: ");
+    Serial.println(stepboi.getCurrentStallGuardReading());
+  }
+  delay(5000); // delay 5 seconds
+  */
+  digitalWrite(md_chipSelect, LOW);
 }
 
 /*
- * The following commands are adapted from the example class in the description
- * for communicating with an esp in slave mode
- */
+   The following commands are adapted from the example class in the description
+   for communicating with an esp in slave mode
+*/
 
 // ReadStatus asks the esp to send its status so that the mpu can read it
 uint32_t readStatus() {
