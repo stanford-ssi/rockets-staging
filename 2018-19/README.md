@@ -1,23 +1,23 @@
 # This is a list of things that we have to do with the code / pcb before the launch, in this order.
 
-1.  Check pcb for shorts
-2.  Assemble pcb and reflow
-3.  Solder on larger components
-4.  Double check that everything is connected properly
-5.  Turn on power supplies and see if we actually get 3.3V from buck1
-6.  Flash Arduino bootloader onto the Samd21
-7.  Flash code onto the esp
+1.  ~~Check pcb for shorts~~
+2.  ~~Assemble pcb and reflow~~
+3.  ~~Solder on larger components~~
+4.  ~~Double check that everything is connected properly~~
+5.  ~~Turn on power supplies and see if we actually get 3.3V from buck1~~
+6.  ~~Flash Arduino bootloader onto the Samd21~~
+7.  ~~Flash code onto the esp~~
 
   .Note that all code is currently `FlightCodeRevA`
 
 ## TEST 1: SAMD21 Talks
-- Blink sketch
+- ~~Blink sketch~~
 - Write to SD card and log from photoresistor
-- Controls boost converter
+- ~~Controls boost converter~~
 - Drives motor
 
 ## TEST 2: ESP Talks
-- OTA Blink Sketch (FlightCodeRevA)
+- ~~OTA Blink Sketch (FlightCodeRevA)~~
 - Wireless 'arming' blink sketch
 - ESP changes memory register based on WiFi signal
 - Controlling from mobile device for assembly
