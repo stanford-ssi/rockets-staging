@@ -33,9 +33,11 @@ void setup() {
   pinMode(md_chipSelect, OUTPUT);  
   pinMode(md_step, OUTPUT);
   pinMode(md_dir, OUTPUT);
+  pinMode(md_clk, OUTPUT);
   
   digitalWrite(md_en, LOW); // enable the output of the chip (low = enabled)
   digitalWrite(md_dir, LOW); // choose a direction to begin with
+  digitalWrite(md_clk, LOW); // writing low makes the chip use its on-board oscillator
 
   Serial.println("Configuring chopper control register");
   
