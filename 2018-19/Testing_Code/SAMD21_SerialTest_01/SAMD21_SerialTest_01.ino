@@ -5,6 +5,9 @@
 #define PAD_SERIAL2_TX       (UART_TX_PAD_2)      // SERCOM pad 2
 #define PAD_SERIAL2_RX       (SERCOM_RX_PAD_3)    // SERCOM pad 3
 
+// RX = PA19 = D12 = 4th from bottom right of right side
+// TX = PA18 = D10 = 3rd from bottom right of right side
+
 // Instantiate the Serial2 class
 Uart Serial2(&sercom1, PIN_SERIAL2_RX, PIN_SERIAL2_TX, PAD_SERIAL2_RX, PAD_SERIAL2_TX);
 
