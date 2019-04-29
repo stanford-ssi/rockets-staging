@@ -23,17 +23,23 @@ const int md_sgtst = 35;      // PB22 on Arduino M0
 // byte smarten = 10101000001000000010; // coolStep control register - normal setup
 
 unsigned long chopconf = 0x901B4ul;
-unsigned long sgcsconf = 0xD001F;
-unsigned long drvconf = 0xEF010;
-unsigned long drvctrl = 0x8;
-unsigned long smarten = 0xA8202;
+unsigned long sgcsconf = 0xD001Ful;
+unsigned long drvconf = 0xEF010ul;
+unsigned long drvctrl = 0x8ul;
+unsigned long smarten = 0xA8202ul;
 
 const int enable = 16;
 int step_speed =  200;
 
 void setup() {
+  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE3));
+  //SPI.setBitOrder(MSBFIRST); 14000000
+  //SPI.setClockDivider(SPI_CLOCK_DIV8);
   SPI.begin();
   SerialUSB.begin(9600);
+  while(!SerialUSB){
+    ;
+  }
   
   pinMode(md_en, OUTPUT);
   pinMode(md_chipSelect, OUTPUT);  
@@ -56,7 +62,7 @@ void setup() {
 
 void writeMotor(unsigned long command){
   digitalWrite(md_chipSelect, LOW);
-  unsigned long response;
+  unsigned long response = 0xFFFFul;
   response = SPI.transfer((command >> 16) & 0xff);
   response <<= 8;
   response |= SPI.transfer((command >>  8) & 0xff);
@@ -64,7 +70,8 @@ void writeMotor(unsigned long command){
   response |= SPI.transfer((command) & 0xff);
   response >>= 4;
   digitalWrite(md_chipSelect, HIGH);
-  SerialUSB.println(response, HEX);
+  SerialUSB.print("Response: ");
+  SerialUSB.println(response, BIN);
 }
 
 void loop() {
@@ -76,4 +83,5 @@ void loop() {
   delay(1000); // min delay is 10 ns, so we should be good
   digitalWrite(md_step, LOW);
   delay(1000);
+  writeMotor(drvctrl);
 }
