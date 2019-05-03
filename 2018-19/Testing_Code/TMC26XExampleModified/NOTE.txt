@@ -1,0 +1,1 @@
+TMC26XStepper file must be in Arduino\Libraries\TMC26XStepper folder locally
