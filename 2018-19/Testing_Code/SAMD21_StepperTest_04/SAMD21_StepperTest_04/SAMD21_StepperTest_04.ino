@@ -9,11 +9,11 @@
 // Motor Driver communication variables
 
 const int md_chipSelect = 6;
-const int md_step = 11;       
-const int md_dir = 12;        
-const int md_clk = 5;        
-const int md_en = 10;         
-const int md_sgtst = 9;      
+const int md_step = 7;   //11    
+const int md_dir = 4;    //12    
+const int md_clk = 10;    //5    
+const int md_en = 5;    //10     
+const int md_sgtst = 9;  //9    
 
 // Motor Driver configuration bytes
 // byte chopconf = 10010000000110110100; // normal startup
