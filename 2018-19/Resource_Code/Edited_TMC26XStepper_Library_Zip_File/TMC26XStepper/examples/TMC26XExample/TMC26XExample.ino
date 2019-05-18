@@ -25,17 +25,19 @@
 #include <SPI.h>
 #include <TMC26XStepper.h>
 
-//we have a stepper motor with 200 steps per rotation, CS pin 2, dir pin 6, step pin 7 and a current of 300mA
-TMC26XStepper tmc26XStepper = TMC26XStepper(200,44,36,31,700);
+// EDITED FOR ARDUINO MICRO BREAKOUT WITH BOB
+
+//we have a stepper motor with 200 steps per rotation, CS pin 2, dir pin 4, step pin 5 and a current of 300mA
+TMC26XStepper tmc26XStepper = TMC26XStepper(200,3,4,5,700);
 int curr_step;
 int speed =  0;
 int speedDirection = 100;
 int maxSpeed = 1000;
-const int md_enable = 37; 
+const int md_enable = 2;
 
 void setup() {
   pinMode(md_enable, OUTPUT);
-  digitalWrite(md_enable, HIGH);
+  digitalWrite(md_enable, LOW);
   SerialUSB.begin(9600);
   while(!SerialUSB){
     ;
