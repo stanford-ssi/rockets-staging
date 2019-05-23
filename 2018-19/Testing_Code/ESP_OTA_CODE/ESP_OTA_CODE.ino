@@ -13,7 +13,7 @@
 
 // Replace with your network credentials
 const char* ssid = "Staging2K19";
-const char* password = "sEWnon6YhY!y7Ul#wwd&";
+const char* password = "rocketscience";
 const int led_pin = 0; // pin 0 connected to LED on h.boson 1.0
 
 void setup() {
